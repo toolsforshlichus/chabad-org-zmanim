@@ -1,0 +1,74 @@
+{
+  "name": "chabad-org-zmanim",
+  "version": "1.0.0",
+  "description": "Zero-dependency TypeScript client for the Chabad.org Zmanim (halachic times) API",
+  "author": "toolsforshlichus",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "chabad",
+    "zmanim",
+    "halachic-times",
+    "jewish",
+    "judaism",
+    "shabbat",
+    "shabbos",
+    "candle-lighting",
+    "sunrise",
+    "sunset",
+    "davening",
+    "synagogue",
+    "torah",
+    "chabad-org"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toolsforshlichus/chabad-org-zmanim"
+  },
+  "homepage": "https://toolsforshlichus.github.io/chabad-org-zmanim/",
+  "bugs": {
+    "url": "https://github.com/toolsforshlichus/chabad-org-zmanim/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitepress": "^1.6.4",
+    "vitest": "^2.0.0"
+  }
+}

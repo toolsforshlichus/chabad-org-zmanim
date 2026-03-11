@@ -1,0 +1,95 @@
+# chabad-org-zmanim
+
+> Zero-dependency TypeScript client for the Chabad.org Zmanim (halachic times) API. Server-side only (Node.js 18+, Bun, Deno, Cloudflare Workers). Does NOT work in browsers due to CORS.
+
+## Key facts
+
+- Fetches halachic times (zmanim) from Chabad.org's internal API
+- Returns parsed, structured data with full TypeScript types
+- Supports single-day and date-range queries
+- Locations are specified by US ZIP code (locationType: 2) or Chabad city ID (locationType: 1)
+- All fetch functions accept an AbortSignal for cancellation
+- Throws typed errors: ZmanimNetworkError, ZmanimParseError, ZmanimError
+
+## Quick start
+
+```ts
+import { getZmanimByZip } from "chabad-org-zmanim";
+
+const result = await getZmanimByZip(11213, new Date());
+console.log(result.days[0].times.Shkiah); // "7:04 PM"
+```
+
+## Main functions
+
+- `getZmanimByZip(zip: number, date: Date, signal?: AbortSignal)` — Fetch zmanim for a US ZIP code
+- `getZmanimByCity(cityId: number, date: Date, signal?: AbortSignal)` — Fetch zmanim for a Chabad city ID
+- `getZmanimRange(locationId, locationType, startDate, endDate, signal?)` — Fetch a date range
+- `fetchZmanim(options: ZmanimOptions)` — Full-control fetch, returns parsed result
+- `fetchZmanimRaw(options: ZmanimOptions)` — Returns raw API JSON response
+- `getTime(day: ParsedDay, type: ZmanType)` — Get a single time string from a day
+- `hasCandleLighting(day: ParsedDay)` — Check if candle lighting exists
+- `hasShabbosEnds(day: ParsedDay)` — Check if Shabbos ends exists
+- `getSpecialZmanim(day: ParsedDay)` — Get only holiday-related zmanim
+- `parseResponse(raw: ZmanimApiResponse)` — Parse raw API response manually
+- `parseAspNetDate(s: string)` — Parse "/Date(timestamp)/" strings
+- `stripHtml(html: string)` — Strip HTML tags and decode entities
+
+## ZmanimOptions
+
+```ts
+interface ZmanimOptions {
+  locationId: number;      // ZIP code or Chabad city ID
+  locationType: 1 | 2;    // 1 = city ID, 2 = ZIP code
+  date: Date;              // The date to fetch
+  endDate?: Date;          // Optional end date for ranges
+  aid?: number;            // Chabad.org affiliate ID (default: 143790)
+  userAgent?: string;      // Custom User-Agent
+  signal?: AbortSignal;    // For cancellation
+}
+```
+
+## ParsedDay structure
+
+```ts
+interface ParsedDay {
+  date: Date;
+  displayDate: string;
+  dayOfWeek: number;       // 0 = Sunday
+  parsha: string | null;
+  holidayName: string | null;
+  isHoliday: boolean;
+  isDstActive: boolean;
+  zmanim: ParsedZman[];
+  times: Record<string, string>; // e.g. { Shkiah: "7:04 PM" }
+}
+```
+
+## Known ZmanType values
+
+AlosHashachar, EarliestTefillin, NetzHachamah, LatestShema, LatestTefillah, LastEatingChametzTime, BurnChametzTime, Chatzos, MinchahGedolah, MinchahKetanah, PlagHaminchah, CandleLighting, Shkiah, Tzeis, ShabbosEnds, ChatzosNight, ShaahZmanit
+
+## Error handling
+
+```ts
+try {
+  const result = await getZmanimByZip(11213, new Date());
+} catch (err) {
+  if (err instanceof ZmanimNetworkError) {
+    // Network failure or non-2xx HTTP status
+    console.error(err.statusCode);
+  } else if (err instanceof ZmanimParseError) {
+    // JSON parse failure or missing fields
+  }
+}
+```
+
+## Docs
+
+- [README](https://github.com/toolsforshlichus/chabad-org-zmanim#readme): Full documentation with examples
+- [Source code](https://github.com/toolsforshlichus/chabad-org-zmanim/tree/main/src): TypeScript source files
+
+## Optional
+
+- [npm package](https://www.npmjs.com/package/chabad-org-zmanim): npm registry page
+- [Chabad.org Zmanim page](https://www.chabad.org/calendar/zmanim.htm): The website this library fetches data from
