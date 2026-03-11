@@ -1,5 +1,7 @@
 # chabad-org-zmanim
 
+**[Documentation](https://toolsforshlichus.github.io/chabad-org-zmanim/)** | **[GitHub](https://github.com/toolsforshlichus/chabad-org-zmanim)** | **[npm](https://www.npmjs.com/package/chabad-org-zmanim)**
+
 Zero-dependency TypeScript client for the [Chabad.org Zmanim API](https://www.chabad.org/calendar/zmanim.htm). Fetch halachic times (zmanim) for any location with full type safety.
 
 - Zero dependencies
